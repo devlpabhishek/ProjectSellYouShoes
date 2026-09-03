@@ -5,6 +5,7 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import Main from './Main';
+import Landing from './Landing';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/landing" element={<Landing />} />
             </Routes>
         </BrowserRouter>
   );
