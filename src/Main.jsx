@@ -5,11 +5,14 @@ import img1 from './Assets/img1.jpg';
 import img2 from './Assets/img2.jpg';
 import img3 from './Assets/img3.jpg';
 import { Link } from 'react-router-dom';
+import Footer from './Footer';
 
 
 export default function Main() {
     return (
         // Added a max-width and horizontal padding (px-4) so it doesn't touch screen edges on mobile
+        <div>
+
         <div className="w-full pb-20">
             <div className="mt-8 text-center px-4 md:px-20">
                 <p className='text-lg md:text-xl text-black-700'>
@@ -79,7 +82,8 @@ export default function Main() {
                     </Link>
                 </div>
             </div>
-
         </div>
+            <Footer />
+                        </div>
     );
 }
