@@ -8,23 +8,29 @@ import Main from './Main';
 import Landing from './Landing';
 import UserHome from './UserHome';
 import CreatePost from './CreatePost';
-
+import Profile from './Profile'; // Adjust paths based on your folder structure// Adjust paths based on your folder structure
+import YourPosts from './YourPosts';
+import ProductDetails from './ProductDetails'; // Adjust paths based on your folder structure
 function App() {
   return (
-  <BrowserRouter>
-            {/* The Navbar sits outside the Routes so it appears on every page */}
-            <Navbar />
-            
-            {/* The Routes determine which component to show based on the URL */}
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/landing" element={<Landing />} />
-                <Route path="/userhome" element={<UserHome/>}/>
-                <Route path='/createpost' element={<CreatePost/>}/>
-            </Routes>
-        </BrowserRouter>
+    <BrowserRouter>
+      {/* The Navbar sits outside the Routes so it appears on every page */}
+      <Navbar />
+
+      {/* The Routes determine which component to show based on the URL */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/userhome" element={<UserHome />} />
+        <Route path='/createpost' element={<CreatePost />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/YourPosts" element={<YourPosts />} />
+        <Route
+          path="/productdetails/:productId"element={<ProductDetails />}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 

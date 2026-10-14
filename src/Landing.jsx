@@ -8,7 +8,6 @@ import ProductGrid from './Product'
 export default function Landing() {
   return (
     <div>
-        <CategoryBar/>
         <Product />
     <div>This is the landing page</div>
     </div>

@@ -84,6 +84,9 @@ app.post('/users', async (req, res) => {
     }
 });
 
+app.get('/test', (req, res) => {
+    res.send('Shopmate backend is working!');
+});
 
 // Login user
 app.post('/login', async (req, res) => {
@@ -243,6 +246,44 @@ app.get('/products', async (req, res) => {
         });
     }
 });
+
+app.get('/products/:productId', async (req, res) => {
+    try {
+        const { productId } = req.params;
+        let product = null;
+
+        // Find by MongoDB _id when the ID is a valid ObjectId
+        if (mongoose.Types.ObjectId.isValid(productId)) {
+            product = await Products.findById(productId);
+        }
+
+        // If not found, try your custom numeric/string id
+        if (!product) {
+            product = await Products.findOne({ id: productId });
+
+            // Support numeric custom IDs, if applicable
+            if (!product && /^\d+$/.test(productId)) {
+                product = await Products.findOne({
+                    id: Number(productId)
+                });
+            }
+        }
+
+        if (!product) {
+            return res.status(404).json({
+                message: 'Product not found'
+            });
+        }
+
+        res.json(product);
+    } catch (error) {
+        console.error('Error fetching product details:', error);
+        res.status(500).json({
+            message: 'Server error while fetching product details'
+        });
+    }
+});
+
 
 //User specific posts
 

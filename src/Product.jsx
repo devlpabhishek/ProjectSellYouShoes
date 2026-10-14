@@ -1,20 +1,26 @@
+import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
-import Footer from './Footer';
 import axios from 'axios';
+import CategoryBar from './Cate';
 import { Link } from 'react-router-dom';
 
 // Product Card
 function ProductCard({ products }) {
     const [wishlist, setWishlist] = useState(false);
+    const navigate = useNavigate();
+
+
 
     return (
-        <div className="bg-white border border-gray-200 rounded-sm hover:shadow-lg transition-shadow duration-200 cursor-pointer relative group flex flex-col">
+        <div className="bg-gray-100 rounded-sm hover:shadow-lg transition-shadow duration-200 cursor-pointer relative group flex flex-col w-full min-w-0">
 
             {/* Wishlist Heart Icon */}
             <button
+                type="button"
+                aria-label="Toggle wishlist"
                 className={`absolute top-3 right-3 z-10 ${wishlist
-                        ? 'text-red-500'
-                        : 'text-gray-300 hover:text-red-500'
+                    ? 'text-red-500'
+                    : 'text-gray-300 hover:text-red-500'
                     }`}
                 onClick={() => setWishlist(!wishlist)}
             >
@@ -35,7 +41,7 @@ function ProductCard({ products }) {
             </button>
 
             {/* Product Image */}
-            <div className="h-48 w-full p-4 flex items-center justify-center">
+            <div className="h-36 sm:h-40 md:h-48 w-full p-3 sm:p-4 flex items-center justify-center">
                 <img
                     src={products.image}
                     alt={products.title}
@@ -44,13 +50,15 @@ function ProductCard({ products }) {
             </div>
 
             {/* Product Details */}
-            <div className="p-4 flex flex-col flex-grow border-t border-gray-100">
-
-                <span className="text-sm text-gray-500 font-medium mb-1">
+            <Link
+                to={`/productdetails/${products._id || products.id}`}
+                className="p-3 sm:p-4 flex flex-col flex-grow border-t border-gray-100 min-w-0"
+            >
+                <span className="text-xs sm:text-sm text-gray-500 font-medium mb-1">
                     {products.brand}
                 </span>
 
-                <h3 className="text-sm text-gray-900 group-hover:text-blue-600 line-clamp-2 h-10 mb-2">
+                <h3 className="text-xs sm:text-sm text-gray-900 group-hover:text-blue-600 line-clamp-2 min-h-10 mb-2">
                     {products.title}
                 </h3>
 
@@ -72,21 +80,19 @@ function ProductCard({ products }) {
                             />
                         </svg>
                     </div>
-
-
                 </div>
 
                 {/* Price */}
-                <div className="flex items-baseline gap-2 mb-1 mt-auto">
-                    <span className="text-lg font-bold text-gray-900">
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 mb-1 mt-auto">
+                    <span className="text-base sm:text-lg font-bold text-gray-900">
                         {products.price}
                     </span>
 
-                    <span className="text-sm text-gray-500 line-through">
+                    <span className="text-xs sm:text-sm text-gray-500 line-through">
                         {products.originalPrice}
                     </span>
 
-                    <span className="text-sm font-bold text-green-600">
+                    <span className="text-xs sm:text-sm font-bold text-green-600">
                         {products.discount}
                     </span>
                 </div>
@@ -94,79 +100,129 @@ function ProductCard({ products }) {
                 <div className="text-xs text-gray-700 mt-1">
                     Free delivery
                 </div>
-            </div>
+            </Link>
         </div>
     );
 }
 
 // Main Product Grid
 export default function ProductGrid() {
-
-    // Store products fetched from MongoDB
     const [products, setProducts] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [hasSearched, setHasSearched] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState(false);
 
-    // Fetch products from backend
+    // Fetch products from MongoDB
     useEffect(() => {
         const fetchProducts = async () => {
             try {
+                setLoading(true);
+                setFetchError(false);
+
                 const response = await axios.get(
-                    'http://localhost:3001/products'
+                    "http://localhost:3001/products"
                 );
 
+                if (!Array.isArray(response.data)) {
+                    console.error(
+                        "Expected an array of products:",
+                        response.data
+                    );
+
+                    setProducts([]);
+                    setFetchError(true);
+                    return;
+                }
+
                 setProducts(response.data);
+                console.log("Products fetched successfully:", response.data);
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error(
+                    "Error fetching products:",
+                    error.response?.data || error.message
+                );
+
+                setProducts([]);
+                setFetchError(true);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchProducts();
     }, []);
 
+    // Receive search term from CategoryBar
+    const handleSearch = (term) => {
+        setSearchTerm(term.trim().toLowerCase());
+        setHasSearched(true);
+    };
+
+    // Filter products using brand, title and keywords
+    const filteredProducts = products.filter((product) => {
+        const searchableFields = [
+            product.brand,
+            product.title,
+            product.keyword,
+            product.keywords,
+            product.category,
+            product.id
+        ];
+
+        const searchableText = searchableFields
+            .flatMap((field) =>
+                Array.isArray(field) ? field : [field]
+            )
+            .filter(
+                (field) => field !== null && field !== undefined
+            )
+            .join(" ")
+            .toLowerCase();
+
+        const matchesSearch =
+            !searchTerm || searchableText.includes(searchTerm);
+
+        // IMPORTANT: return determines which products remain
+        return matchesSearch;
+    });
+
     return (
-        <div className="max-w-7xl mx-auto p-4 md:p-8 bg-gray-50 min-h-screen">
-            <div className='flex'>
-                <Link to="/createpost" className='bg-blue-600 text-white rounded px-2.5 py-2 hover:bg-white hover:text-blue-600 cursor-pointer '>Add products</Link>
-            </div>
-            {/* Header */}
-            <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
+        <div className="max-w-8xl mx-auto p-2 md:p-2 bg-gray-200 min-h-screen rounded-md">
 
-                <h2 className="text-xl font-semibold mb-6">
-                    Trending Offers
-                </h2>
+            {/* Category Bar and Search */}
+            <CategoryBar
+                onSearch={handleSearch}
+                products={products}
+            />
 
-                <div className="flex items-center gap-2 w-full md:w-auto">
-
-                    <input
-                        type="text"
-                        placeholder="Search for products..."
-                        className="border border-gray-300 p-2 rounded w-full max-w-md focus:outline-none focus:border-blue-500"
-                    />
-
-                    <button
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                        onClick={() =>
-                            alert('Search functionality not implemented yet.')
-                        }
-                    >
-                        Search
-                    </button>
-
-                </div>
-            </div>
-
-            {/* products */}
+            {/* PRODUCTS */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-                {products.map((products) => (
-                    <ProductCard
-                        key={products._id}
-                        products={products}
-                    />
-                ))}
+                {loading ? (
+                    <p className="col-span-full text-center p-6">
+                        Loading products...
+                    </p>
+                ) : fetchError ? (
+                    <p className="col-span-full text-center p-6 text-red-600">
+                        Unable to fetch products. Please check your backend server and MongoDB connection.
+                    </p>
+                ) : filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
+                        <ProductCard
+                            key={product._id || product.id}
+                            products={product}
+                        />
+                    ))
+                ) : (
+                    <p className="col-span-full text-center p-6">
+                        {hasSearched
+                            ? `No products found for "${searchTerm}"`
+                            : "No products available"}
+                    </p>
+                )}
 
             </div>
-
-            <Footer />
         </div>
     );
 }
