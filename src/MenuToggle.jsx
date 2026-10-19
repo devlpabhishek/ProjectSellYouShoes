@@ -1,8 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import back from "./Assets/back.png";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   Menu,
@@ -13,8 +11,10 @@ import {
   FileText,
   ShieldCheck,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
-const user = JSON.parse(localStorage.getItem('user'));
+
+// Menu items
 const menuItems = [
   {
     name: "Profile",
@@ -46,6 +46,22 @@ const menuItems = [
 export default function MenuToggle() {
   const [isOpen, setIsOpen] = useState(false);
 
+  const navigate = useNavigate();
+
+  // Get logged-in user
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+
+    // Notify Navbar that authentication state changed
+    window.dispatchEvent(new Event("authChange"));
+
+    setIsOpen(false);
+    navigate("/");
+  };
+
   // Close menu with Escape key
   useEffect(() => {
     const handleEscape = (event) => {
@@ -71,31 +87,58 @@ export default function MenuToggle() {
   }, [isOpen]);
 
   return (
-    <>
-      {/* Menu Toggle Button */}
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-label={isOpen ? "Close menu" : "Open menu"}
-        aria-expanded={isOpen}
-        className="relative z-[60] flex h-11 w-11 items-center
-                   justify-center rounded-xl text-gray-800
-                   transition hover:bg-gray-100
-                   focus:outline-none focus:ring-2
-                   focus:ring-blue-500"
+    <nav className="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+      {/* Brand Name */}
+      <Link
+        to="/"
+        className="text-2xl font-bold text-gray-900 cursor-pointer"
       >
-        {isOpen ? <X size={26} /> : <Menu size={26} />}
-      </button>
+        ShopMate
+      </Link>
+
+      {/* Menu Toggle and Logout Buttons */}
+      <div className="flex items-center gap-2">
+        {/* Menu Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          className="relative z-[60] flex h-11 w-11 items-center
+                     justify-center rounded-xl text-gray-800
+                     transition hover:bg-gray-100
+                     focus:outline-none focus:ring-2
+                     focus:ring-blue-500"
+        >
+          {isOpen ? <X size={26} /> : <Menu size={26} />}
+        </button>
+
+        {/* Logout Button */}
+        <button
+          type="button"
+          onClick={handleLogout}
+          aria-label="Logout"
+          title="Logout"
+          className="relative z-[60] flex h-11 w-11 items-center
+                     justify-center rounded-xl text-red-600
+                     transition hover:bg-red-50
+                     focus:outline-none focus:ring-2
+                     focus:ring-red-500"
+        >
+          <LogOut size={23} />
+        </button>
+      </div>
 
       {/* Background Overlay */}
       <div
         onClick={() => setIsOpen(false)}
         className={`fixed inset-0 z-40 bg-black/40
                     transition-opacity duration-300
-                    ${isOpen
-            ? "visible opacity-100"
-            : "invisible opacity-0"
-          }`}
+                    ${
+                      isOpen
+                        ? "visible opacity-100"
+                        : "invisible opacity-0"
+                    }`}
       />
 
       {/* Slide-in Menu */}
@@ -107,23 +150,26 @@ export default function MenuToggle() {
                     w-80 max-w-[85vw] flex-col bg-white
                     shadow-2xl transition-transform
                     duration-300 ease-in-out
-                    ${isOpen
-            ? "translate-x-0"
-            : "translate-x-full"
-          }`}
+                    ${
+                      isOpen
+                        ? "translate-x-0"
+                        : "translate-x-full"
+                    }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between
-                        border-b border-gray-200 px-5 py-5">
-          
+        <div
+          className="flex items-center justify-between
+                     border-b border-gray-200 px-5 py-5"
+        >
           <div>
             <h2 className="text-lg font-bold text-gray-900">
               My Account
             </h2>
+
             <p className="mt-1 text-xs text-gray-500">
               {user?.firstName}
+              {user?.lastName ? ` ${user.lastName}` : ""}
             </p>
-            
           </div>
 
           <button
@@ -139,8 +185,10 @@ export default function MenuToggle() {
 
         {/* Menu Options */}
         <nav className="flex-1 overflow-y-auto px-4 py-5">
-          <p className="mb-3 px-3 text-xs font-semibold
-                        uppercase tracking-widest text-gray-400">
+          <p
+            className="mb-3 px-3 text-xs font-semibold
+                       uppercase tracking-widest text-gray-400"
+          >
             Menu
           </p>
 
@@ -149,9 +197,9 @@ export default function MenuToggle() {
               const Icon = item.icon;
 
               return (
-                <a
+                <Link
                   key={item.path}
-                  href={item.path}
+                  to={item.path}
                   onClick={() => setIsOpen(false)}
                   className="group flex items-center gap-3
                              rounded-xl px-3 py-3.5
@@ -174,7 +222,7 @@ export default function MenuToggle() {
                                transition group-hover:translate-x-1
                                group-hover:text-blue-600"
                   />
-                </a>
+                </Link>
               );
             })}
           </div>
@@ -187,11 +235,6 @@ export default function MenuToggle() {
           </p>
         </div>
       </aside>
-    </>
+    </nav>
   );
-}
-
-
-const Profile = () =>{
-  
 }

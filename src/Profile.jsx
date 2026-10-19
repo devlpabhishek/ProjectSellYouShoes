@@ -1,5 +1,8 @@
 
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import back from "./Assets/back.png";
+
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -33,6 +36,16 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10 sm:px-6">
+      <Link
+          to="/userhome"
+          className="hover:text-blue-500 text-blue-600 font-medium transition-colors"
+        >
+          <img
+            src={back}
+            alt="Back"
+            className="md:w-8 md:h-8 w-4 h-4"
+          />
+        </Link>
       <div className="mx-auto max-w-lg overflow-hidden rounded-2xl bg-white shadow-md">
 
         {/* Profile Header */}

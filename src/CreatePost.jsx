@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import back from './Assets/back.png';
+
 
 const categoryData = {
     Fashion: [
@@ -177,9 +180,18 @@ export default function CreatePost() {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
-
+<Link
+                    to="/userhome"
+                    className="hover:text-blue-500 text-blue-600 font-medium transition-colors"
+                >
+                    <img
+                        src={back}
+                        alt="Back"
+                        className="md:w-8 md:h-8 w-4 h-4"
+                    />
+                </Link>
             <div className="max-w-4xl mx-auto">
-
+                
                 {/* Header */}
                 <div className="mb-6">
 

@@ -8,7 +8,7 @@ export default function UserHome() {
 
     return (
         <div className="text-center mt-10">
-            <MenuToggle />
+            {/* <MenuToggle /> */}
             <h1 className="text-3xl font-bold">
                 Welcome {user?.firstName}
             </h1>

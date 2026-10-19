@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import back from './Assets/back.png'
+
 
 export default function AddProducts() {
     return (
