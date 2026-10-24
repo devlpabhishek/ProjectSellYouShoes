@@ -14,14 +14,26 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB connection
+
+require("dotenv").config();
+
+// MongoDB connection
 mongoose
-    .connect('mongodb://127.0.0.1:27017/users')
+    .connect(process.env.MONGO_URI)
     .then(() => {
-        console.log('Connected to MongoDB successfully');
+        console.log("MongoDB connected successfully");
+
+        const PORT = process.env.PORT || 3001;
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
     })
-    .catch((err) => {
-        console.error('Failed to connect to MongoDB:', err);
+    .catch((error) => {
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
     });
+
 
 // Register user
 app.post('/users', async (req, res) => {
