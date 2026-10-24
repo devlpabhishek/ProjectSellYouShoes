@@ -34,7 +34,7 @@ export default function Signup() {
 
             // 3. Send data to backend
             const result = await axios.post(
-                'https://projectsellyoushoes-2.onrender.com/users',
+                'https://projectsellyoushoes-2.onrender.com/test',
                 {
                     firstName,
                     lastName,
