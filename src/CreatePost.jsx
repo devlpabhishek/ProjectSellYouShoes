@@ -136,7 +136,7 @@ export default function CreatePost() {
             console.log('Sending post data:', postData);
 
             const response = await axios.post(
-                'http://localhost:3001/userposts',
+                'https://projectsellyoushoes-2.onrender.com/userposts',
                 postData
             );
 

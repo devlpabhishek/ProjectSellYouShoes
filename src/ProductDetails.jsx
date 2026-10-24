@@ -20,7 +20,7 @@ export default function ProductDetails() {
                 setError("");
 
                 const response = await axios.get(
-                    `http://localhost:3001/products/${productId}`
+                    `https://projectsellyoushoes-2.onrender.com/products/${productId}`
                 );
 
                 setProduct(response.data);
@@ -58,7 +58,7 @@ export default function ProductDetails() {
                 return;
             }
 
-            await axios.post("http://localhost:3001/cart/add", {
+            await axios.post("https://projectsellyoushoes-2.onrender.com/cart/add", {
                 userId,
                 productId: String(product._id || product.id),
                 title: product.title,
@@ -95,7 +95,7 @@ export default function ProductDetails() {
                 return;
             }
 
-            await axios.post("http://localhost:3001/cart/add", {
+            await axios.post("https://projectsellyoushoes-2.onrender.com/cart/add", {
                 userId,
                 productId: String(product._id || product.id),
                 title: product.title,

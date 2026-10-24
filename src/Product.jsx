@@ -121,7 +121,7 @@ export default function ProductGrid() {
                 setFetchError(false);
 
                 const response = await axios.get(
-                    "http://localhost:3001/products"
+                    "https://projectsellyoushoes-2.onrender.com/products"
                 );
 
                 if (!Array.isArray(response.data)) {
