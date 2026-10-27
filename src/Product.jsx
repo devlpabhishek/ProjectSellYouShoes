@@ -120,8 +120,10 @@ export default function ProductGrid() {
                 setLoading(true);
                 setFetchError(false);
 
+                const API_URL = process.env.REACT_APP_API_URL;
+
                 const response = await axios.get(
-                    "http://localhost:3001/products"
+                    `${API_URL}/products`
                 );
 
                 if (!Array.isArray(response.data)) {

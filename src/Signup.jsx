@@ -13,7 +13,7 @@ export default function Signup() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isAccepted, setIsAccepted] = useState(false);
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const handleRegister = async (e) => {
 
         e.preventDefault();
@@ -34,7 +34,7 @@ export default function Signup() {
 
             // 3. Send data to backend
             const result = await axios.post(
-                'http://localhost:3001/users',
+                `${API_URL}/users`,
                 {
                     firstName,
                     lastName,

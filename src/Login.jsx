@@ -15,7 +15,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
+  const API_URL = process.env.REACT_APP_API_URL;
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -32,7 +32,7 @@ export default function Login() {
       setLoading(true);
 
       const response = await axios.post(
-        "http://localhost:3001/login",
+        `${API_URL}/login`,
         {
           email,
           password,
@@ -84,7 +84,7 @@ export default function Login() {
       if (error.response) {
         setError(
           error.response.data.message ||
-            "Invalid email or password"
+          "Invalid email or password"
         );
       } else {
         setError(
